@@ -1,0 +1,24 @@
+{
+  "miniapp": {
+    "version": "1",
+    "name": "Minesweeper",
+    "homeUrl": "https://kaif070.github.io/Minesweeper/",
+    "iconUrl": "https://kaif070.github.io/Minesweeper/icon.png",
+    "splashImageUrl": "https://kaif070.github.io/Minesweeper/splash.png",
+    "splashBackgroundColor": "#1a1a1a",
+    "subtitle": "Classic puzzle game",
+    "description": "Play the classic Minesweeper game with three difficulty modes. Test your logic and luck!",
+    "primaryCategory": "games",
+    "tags": [
+      "puzzle",
+      "strategy",
+      "classic",
+      "logic",
+      "minesweeper"
+    ],
+    "tagline": "Clear the field, avoid the mines!",
+    "ogTitle": "Minesweeper - Classic Puzzle Game",
+    "ogDescription": "Play Minesweeper with Easy, Medium, and Hard modes. Test your logic skills!",
+    "ogImageUrl": "https://kaif070.github.io/Minesweeper/og-image.png"
+  }
+}
