@@ -1,0 +1,29 @@
+{
+  "miniapp": {
+    "version": "1",
+    "name": "Minesweeper",
+    "homeUrl": "https://minesweeper.yourdomain.com",
+    "iconUrl": "https://minesweeper.yourdomain.com/icon.png",
+    "splashImageUrl": "https://minesweeper.yourdomain.com/splash.png",
+    "splashBackgroundColor": "#1a1a1a",
+    "subtitle": "Classic puzzle game",
+    "description": "Play the classic Minesweeper game with three difficulty modes. Test your logic and luck!",
+    "primaryCategory": "games",
+    "tags": [
+      "puzzle",
+      "strategy",
+      "classic",
+      "logic",
+      "minesweeper"
+    ],
+    "screenshotUrls": [
+      "https://minesweeper.yourdomain.com/screenshot1.png",
+      "https://minesweeper.yourdomain.com/screenshot2.png",
+      "https://minesweeper.yourdomain.com/screenshot3.png"
+    ],
+    "tagline": "Clear the field, avoid the mines!",
+    "ogTitle": "Minesweeper - Classic Puzzle Game",
+    "ogDescription": "Play Minesweeper with Easy, Medium, and Hard modes. Test your logic skills!",
+    "ogImageUrl": "https://minesweeper.yourdomain.com/og-image.png"
+  }
+}
