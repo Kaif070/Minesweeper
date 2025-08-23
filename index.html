@@ -4,476 +4,523 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minesweeper - Farcaster Mini App</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .animate-shake {
-            animation: shake 0.5s;
+        
+        body {
+            background-color: #111827;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            min-height: 100vh;
         }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .difficulty-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .btn-difficulty {
+            background-color: #374151;
+            color: white;
+        }
+        
+        .btn-difficulty:hover {
+            background-color: #4b5563;
+        }
+        
+        .btn-difficulty.active {
+            background-color: #2563eb;
+        }
+        
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1f2937;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .info-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-family: monospace;
+        }
+        
+        .btn-new {
+            background-color: #059669;
+            color: white;
+        }
+        
+        .btn-new:hover {
+            background-color: #047857;
+        }
+        
+        .flag-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn-flag {
+            background-color: #374151;
+            color: white;
+        }
+        
+        .btn-flag.active {
+            background-color: #ca8a04;
+        }
+        
+        #game-board {
+            display: grid;
+            gap: 2px;
+            background-color: #1f2937;
+            padding: 8px;
+            border-radius: 8px;
+            margin: 0 auto;
+            width: fit-content;
+        }
+        
         .cell {
-            aspect-ratio: 1;
+            width: 30px;
+            height: 30px;
+            border: none;
+            background-color: #4b5563;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.875rem;
-            font-weight: bold;
+            transition: background-color 0.1s;
             user-select: none;
-            transition: all 0.15s;
-            cursor: pointer;
         }
-        .cell-unrevealed {
-            background-color: rgb(75 85 99);
+        
+        .cell:hover:not(.revealed) {
+            background-color: #6b7280;
         }
-        .cell-unrevealed:hover {
-            background-color: rgb(107 114 128);
+        
+        .cell.revealed {
+            background-color: #1f2937;
+            cursor: default;
         }
-        .cell-flagged {
-            background-color: rgb(202 138 4);
+        
+        .cell.mine {
+            background-color: #dc2626;
         }
-        .cell-revealed {
-            background-color: rgb(31 41 55);
+        
+        .cell.flagged {
+            background-color: #ca8a04;
         }
-        .cell-mine {
-            background-color: rgb(220 38 38);
+        
+        .cell-1 { color: #3b82f6; }
+        .cell-2 { color: #10b981; }
+        .cell-3 { color: #ef4444; }
+        .cell-4 { color: #a855f7; }
+        .cell-5 { color: #f59e0b; }
+        .cell-6 { color: #ec4899; }
+        .cell-7 { color: #9ca3af; }
+        .cell-8 { color: #ffffff; }
+        
+        @media (max-width: 600px) {
+            .cell {
+                width: 25px;
+                height: 25px;
+                font-size: 12px;
+            }
+        }
+        
+        .best-times {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen p-4">
-    <div id="root"></div>
+<body>
+    <div class="container">
+        <h1>💣 Minesweeper</h1>
+        
+        <div class="difficulty-buttons">
+            <button class="btn btn-difficulty active" data-difficulty="easy">Easy</button>
+            <button class="btn btn-difficulty" data-difficulty="medium">Medium</button>
+            <button class="btn btn-difficulty" data-difficulty="hard">Hard</button>
+        </div>
+        
+        <div class="info-bar">
+            <div class="info-display">
+                <span>💣</span>
+                <span id="mine-count">010</span>
+            </div>
+            <button class="btn btn-new" id="new-game">New Game</button>
+            <div class="info-display">
+                <span>⏱️</span>
+                <span id="timer">000</span>
+            </div>
+        </div>
+        
+        <div class="flag-toggle">
+            <button class="btn btn-flag" id="flag-mode">🚩 Flag Mode: OFF</button>
+        </div>
+        
+        <div id="best-times" class="best-times"></div>
+        
+        <div id="game-board"></div>
+    </div>
 
     <script type="module">
-        // Import Farcaster SDK
-        import { sdk } from 'https://esm.sh/@farcaster/miniapp-sdk';
-        
+        // Try to import Farcaster SDK
+        let sdk = null;
+        try {
+            const module = await import('https://esm.sh/@farcaster/miniapp-sdk');
+            sdk = module.sdk;
+        } catch (e) {
+            console.log('Running outside Farcaster context');
+        }
+
         // Game configuration
-        const DIFFICULTIES = {
+        const CONFIGS = {
             easy: { rows: 9, cols: 9, mines: 10 },
             medium: { rows: 16, cols: 16, mines: 40 },
             hard: { rows: 16, cols: 30, mines: 99 }
         };
 
-        // Seedable RNG
-        class SeededRandom {
-            constructor(seed) {
-                this.seed = seed || Date.now();
-            }
+        // Game state
+        let difficulty = 'easy';
+        let board = [];
+        let gameState = 'idle';
+        let flagMode = false;
+        let time = 0;
+        let timerInterval = null;
+        let firstClick = true;
+        let mineCount = CONFIGS[difficulty].mines;
+
+        // Initialize game
+        function init() {
+            setupEventListeners();
+            loadBestTimes();
+            createBoard();
             
-            next() {
-                this.seed = (this.seed * 9301 + 49297) % 233280;
-                return this.seed / 233280;
-            }
-            
-            shuffle(array) {
-                const arr = [...array];
-                for (let i = arr.length - 1; i > 0; i--) {
-                    const j = Math.floor(this.next() * (i + 1));
-                    [arr[i], arr[j]] = [arr[j], arr[i]];
+            // Call SDK ready after a short delay
+            setTimeout(() => {
+                if (sdk) {
+                    sdk.actions.ready();
                 }
-                return arr;
-            }
+            }, 100);
         }
 
-        // Storage utilities
-        const STORAGE_KEY = 'minesweeper-best-times';
-        
-        const loadBestTimes = () => {
-            try {
-                const stored = localStorage.getItem(STORAGE_KEY);
-                return stored ? JSON.parse(stored) : {};
-            } catch {
-                return {};
-            }
-        };
-        
-        const saveBestTime = (difficulty, time) => {
-            try {
-                const times = loadBestTimes();
-                if (!times[difficulty] || time < times[difficulty]) {
-                    times[difficulty] = time;
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(times));
-                    return true;
-                }
-            } catch {}
-            return false;
-        };
+        function setupEventListeners() {
+            // Difficulty buttons
+            document.querySelectorAll('.btn-difficulty').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.btn-difficulty').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    difficulty = e.target.dataset.difficulty;
+                    resetGame();
+                });
+            });
 
-        // Game class
-        class MinesweeperGame {
-            constructor() {
-                this.difficulty = 'easy';
-                this.board = null;
-                this.gameState = 'idle';
-                this.flagMode = false;
-                this.time = 0;
-                this.bestTimes = loadBestTimes();
-                this.isFirstClick = true;
-                this.timerInterval = null;
-                this.longPressTimer = null;
-                this.init();
-            }
+            // New game button
+            document.getElementById('new-game').addEventListener('click', resetGame);
 
-            init() {
-                this.render();
-                this.initSDK();
-            }
+            // Flag mode toggle
+            document.getElementById('flag-mode').addEventListener('click', () => {
+                flagMode = !flagMode;
+                document.getElementById('flag-mode').classList.toggle('active');
+                document.getElementById('flag-mode').textContent = `🚩 Flag Mode: ${flagMode ? 'ON' : 'OFF'}`;
+            });
+        }
 
-            async initSDK() {
-                try {
-                    // Small delay to ensure UI is ready
-                    setTimeout(() => {
-                        sdk.actions.ready();
-                    }, 100);
-                } catch (error) {
-                    console.log('Running outside Farcaster context');
-                }
-            }
-
-            get config() {
-                return DIFFICULTIES[this.difficulty];
-            }
-
-            get remainingMines() {
-                if (!this.board) return this.config.mines;
-                let flagged = 0;
-                for (const row of this.board) {
-                    for (const cell of row) {
-                        if (cell.flagged) flagged++;
-                    }
-                }
-                return this.config.mines - flagged;
-            }
-
-            generateBoard(firstClick) {
-                const { rows, cols, mines } = this.config;
-                const board = Array(rows).fill(null).map(() =>
-                    Array(cols).fill(null).map(() => ({
+        function createBoard() {
+            const config = CONFIGS[difficulty];
+            const boardEl = document.getElementById('game-board');
+            boardEl.innerHTML = '';
+            boardEl.style.gridTemplateColumns = `repeat(${config.cols}, 1fr)`;
+            
+            board = [];
+            
+            for (let row = 0; row < config.rows; row++) {
+                board[row] = [];
+                for (let col = 0; col < config.cols; col++) {
+                    board[row][col] = {
                         hasMine: false,
                         revealed: false,
                         flagged: false,
                         adjacent: 0
-                    }))
-                );
-                
-                // Place mines
-                const positions = [];
-                const excludeIndex = firstClick ? firstClick.row * cols + firstClick.col : -1;
-                
-                for (let i = 0; i < rows * cols; i++) {
-                    if (i !== excludeIndex) positions.push(i);
+                    };
+                    
+                    const cell = document.createElement('button');
+                    cell.className = 'cell';
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.addEventListener('click', handleCellClick);
+                    cell.addEventListener('contextmenu', handleRightClick);
+                    boardEl.appendChild(cell);
                 }
+            }
+            
+            updateDisplay();
+        }
+
+        function placeMines(excludeRow, excludeCol) {
+            const config = CONFIGS[difficulty];
+            let minesPlaced = 0;
+            
+            while (minesPlaced < config.mines) {
+                const row = Math.floor(Math.random() * config.rows);
+                const col = Math.floor(Math.random() * config.cols);
                 
-                const rng = new SeededRandom();
-                const minePositions = rng.shuffle(positions).slice(0, mines);
-                
-                for (const pos of minePositions) {
-                    const row = Math.floor(pos / cols);
-                    const col = pos % cols;
+                if (!board[row][col].hasMine && !(row === excludeRow && col === excludeCol)) {
                     board[row][col].hasMine = true;
+                    minesPlaced++;
                     
                     // Update adjacent counts
                     for (let dr = -1; dr <= 1; dr++) {
                         for (let dc = -1; dc <= 1; dc++) {
                             const nr = row + dr;
                             const nc = col + dc;
-                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !board[nr][nc].hasMine) {
+                            if (nr >= 0 && nr < config.rows && nc >= 0 && nc < config.cols) {
                                 board[nr][nc].adjacent++;
                             }
                         }
                     }
                 }
-                
-                return board;
-            }
-
-            floodFill(startRow, startCol) {
-                const revealed = [];
-                const queue = [{ row: startRow, col: startCol }];
-                const visited = new Set();
-                const { rows, cols } = this.config;
-                
-                while (queue.length > 0) {
-                    const { row, col } = queue.shift();
-                    const key = `${row},${col}`;
-                    
-                    if (visited.has(key)) continue;
-                    visited.add(key);
-                    
-                    if (row < 0 || row >= rows || col < 0 || col >= cols) continue;
-                    if (this.board[row][col].revealed || this.board[row][col].flagged || this.board[row][col].hasMine) continue;
-                    
-                    revealed.push({ row, col });
-                    
-                    if (this.board[row][col].adjacent === 0) {
-                        for (let dr = -1; dr <= 1; dr++) {
-                            for (let dc = -1; dc <= 1; dc++) {
-                                if (dr === 0 && dc === 0) continue;
-                                queue.push({ row: row + dr, col: col + dc });
-                            }
-                        }
-                    }
-                }
-                
-                return revealed;
-            }
-
-            startNewGame() {
-                this.board = null;
-                this.gameState = 'idle';
-                this.time = 0;
-                this.isFirstClick = true;
-                this.flagMode = false;
-                this.stopTimer();
-                this.render();
-            }
-
-            startTimer() {
-                this.stopTimer();
-                this.timerInterval = setInterval(() => {
-                    this.time++;
-                    this.updateTimer();
-                }, 1000);
-            }
-
-            stopTimer() {
-                if (this.timerInterval) {
-                    clearInterval(this.timerInterval);
-                    this.timerInterval = null;
-                }
-            }
-
-            updateTimer() {
-                const timerEl = document.getElementById('timer');
-                if (timerEl) {
-                    timerEl.textContent = this.time.toString().padStart(3, '0');
-                }
-            }
-
-            handleCellClick(row, col) {
-                if (this.gameState === 'won' || this.gameState === 'lost') return;
-                
-                // Initialize board on first click
-                if (this.isFirstClick) {
-                    this.board = this.generateBoard({ row, col });
-                    this.isFirstClick = false;
-                    this.gameState = 'playing';
-                    this.startTimer();
-                    
-                    // Auto-reveal if it's a zero cell
-                    if (this.board[row][col].adjacent === 0) {
-                        const toReveal = this.floodFill(row, col);
-                        for (const { row: r, col: c } of toReveal) {
-                            this.board[r][c].revealed = true;
-                        }
-                    } else {
-                        this.board[row][col].revealed = true;
-                    }
-                    this.renderBoard();
-                    return;
-                }
-                
-                if (!this.board) return;
-                
-                const cell = this.board[row][col];
-                if (cell.revealed) return;
-                
-                if (this.flagMode || cell.flagged) {
-                    // Toggle flag
-                    this.board[row][col].flagged = !this.board[row][col].flagged;
-                    this.renderBoard();
-                    this.updateMineCounter();
-                    return;
-                }
-                
-                // Reveal cell
-                if (cell.hasMine) {
-                    // Game over
-                    for (let r = 0; r < this.board.length; r++) {
-                        for (let c = 0; c < this.board[0].length; c++) {
-                            if (this.board[r][c].hasMine) {
-                                this.board[r][c].revealed = true;
-                            }
-                        }
-                    }
-                    this.gameState = 'lost';
-                    this.stopTimer();
-                    this.renderBoard();
-                    this.showLoseModal();
-                    return;
-                }
-                
-                // Reveal cell(s)
-                if (cell.adjacent === 0) {
-                    const toReveal = this.floodFill(row, col);
-                    for (const { row: r, col: c } of toReveal) {
-                        this.board[r][c].revealed = true;
-                    }
-                } else {
-                    this.board[row][col].revealed = true;
-                }
-                
-                // Check win condition
-                let unrevealed = 0;
-                for (const row of this.board) {
-                    for (const cell of row) {
-                        if (!cell.revealed && !cell.hasMine) unrevealed++;
-                    }
-                }
-                
-                if (unrevealed === 0) {
-                    this.gameState = 'won';
-                    this.stopTimer();
-                    saveBestTime(this.difficulty, this.time);
-                    this.bestTimes = loadBestTimes();
-                    this.renderBoard();
-                    this.showWinModal();
-                }
-                
-                this.renderBoard();
-            }
-            
-            updateMineCounter() {
-                const counterEl = document.getElementById('mine-counter');
-                if (counterEl) {
-                    counterEl.textContent = this.remainingMines.toString().padStart(3, '0');
-                }
-            }
-
-            handleLongPress(row, col) {
-                this.longPressTimer = setTimeout(() => {
-                    if (!this.board || this.board[row][col].revealed) return;
-                    this.board[row][col].flagged = !this.board[row][col].flagged;
-                    this.render();
-                }, 400);
-            }
-
-            cancelLongPress() {
-                if (this.longPressTimer) {
-                    clearTimeout(this.longPressTimer);
-                    this.longPressTimer = null;
-                }
-            }
-
-            showWinModal() {
-                setTimeout(() => {
-                    alert(`🎉 You Won!\nTime: ${this.time} seconds${this.bestTimes[this.difficulty] === this.time ? '\nNew Best Time!' : ''}`);
-                    this.startNewGame();
-                }, 300);
-            }
-
-            showLoseModal() {
-                document.getElementById('board-container').classList.add('animate-shake');
-                setTimeout(() => {
-                    document.getElementById('board-container').classList.remove('animate-shake');
-                    alert('💥 Game Over!\nYou hit a mine!');
-                    this.startNewGame();
-                }, 500);
-            }
-
-            getCellContent(cell) {
-                if (!cell || !this.board) return '';
-                if (cell.flagged) return '🚩';
-                if (!cell.revealed) return '';
-                if (cell.hasMine) return '💣';
-                if (cell.adjacent > 0) return cell.adjacent.toString();
-                return '';
-            }
-
-            getCellClass(cell) {
-                if (!cell || !this.board) return 'cell cell-unrevealed';
-                
-                if (!cell.revealed) {
-                    return cell.flagged ? 'cell cell-flagged' : 'cell cell-unrevealed';
-                }
-                
-                if (cell.hasMine) return 'cell cell-mine';
-                
-                const colors = ['', 'text-blue-400', 'text-green-400', 'text-red-400',
-                    'text-purple-400', 'text-yellow-400', 'text-pink-400',
-                    'text-gray-300', 'text-white'];
-                
-                return `cell cell-revealed ${colors[cell.adjacent] || ''}`;
-            }
-
-            render() {
-                const root = document.getElementById('root');
-                
-                root.innerHTML = `
-                    <div class="max-w-4xl mx-auto">
-                        <h1 class="text-3xl font-bold text-center mb-4">💣 Minesweeper</h1>
-                        
-                        <!-- Difficulty selector -->
-                        <div class="flex justify-center gap-2 mb-4">
-                            ${['easy', 'medium', 'hard'].map(d => `
-                                <button onclick="game.difficulty='${d}'; game.startNewGame()" 
-                                    class="px-4 py-2 rounded capitalize transition-colors ${
-                                        this.difficulty === d 
-                                            ? 'bg-blue-600 text-white' 
-                                            : 'bg-gray-700 hover:bg-gray-600'
-                                    }">
-                                    ${d}
-                                </button>
-                            `).join('')}
-                        </div>
-                        
-                        <!-- Game info -->
-                        <div class="flex justify-between items-center mb-4 bg-gray-800 rounded p-3">
-                            <div class="flex items-center gap-2">
-                                <span class="text-2xl">💣</span>
-                                <span id="mine-counter" class="font-mono text-xl">${this.remainingMines.toString().padStart(3, '0')}</span>
-                            </div>
-                            
-                            <button onclick="game.startNewGame()" 
-                                class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded transition-colors">
-                                New Game
-                            </button>
-                            
-                            <div class="flex items-center gap-2">
-                                <span class="text-2xl">⏱️</span>
-                                <span id="timer" class="font-mono text-xl">${this.time.toString().padStart(3, '0')}</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Flag mode toggle -->
-                        <div class="flex justify-center mb-4">
-                            <button onclick="game.flagMode = !game.flagMode; game.render()" 
-                                class="px-4 py-2 rounded transition-colors ${
-                                    this.flagMode 
-                                        ? 'bg-yellow-600 text-white' 
-                                        : 'bg-gray-700 hover:bg-gray-600'
-                                }">
-                                🚩 Flag Mode: ${this.flagMode ? 'ON' : 'OFF'}
-                            </button>
-                        </div>
-                        
-                        <!-- Best times -->
-                        ${Object.keys(this.bestTimes).length > 0 ? `
-                            <div class="text-center mb-4 text-sm text-gray-400">
-                                Best Times:
-                                ${this.bestTimes.easy ? `<span class="ml-2">Easy: ${this.bestTimes.easy}s</span>` : ''}
-                                ${this.bestTimes.medium ? `<span class="ml-2">Medium: ${this.bestTimes.medium}s</span>` : ''}
-                                ${this.bestTimes.hard ? `<span class="ml-2">Hard: ${this.bestTimes.hard}s</span>` : ''}
-                            </div>
-                        ` : ''}
-                        
-                        <!-- Game board -->
-                        <div id="board-container" class="flex justify-center">
-                            <div id="game-grid" class="inline-block bg-gray-800 p-2 rounded" 
-                                style="display: grid; grid-template-columns: repeat(${this.config.cols}, 1fr); gap: 2px; 
-                                    width: min(90vw, ${this.difficulty === 'hard' ? '900px' : this.difficulty === 'medium' ? '600px' : '400px'});">
-                                <!-- Board cells will be rendered here -->
-                            </div>
-                        </div>
-                    </div>
-                `;
             }
         }
 
-        // Initialize game
-        window.game = new MinesweeperGame();
+        function handleCellClick(e) {
+            const row = parseInt(e.target.dataset.row);
+            const col = parseInt(e.target.dataset.col);
+            
+            if (gameState === 'won' || gameState === 'lost') return;
+            
+            if (firstClick) {
+                placeMines(row, col);
+                firstClick = false;
+                gameState = 'playing';
+                startTimer();
+            }
+            
+            const cell = board[row][col];
+            
+            if (cell.revealed) return;
+            
+            if (flagMode || cell.flagged) {
+                cell.flagged = !cell.flagged;
+                updateDisplay();
+                return;
+            }
+            
+            if (cell.hasMine) {
+                gameOver();
+                return;
+            }
+            
+            revealCell(row, col);
+            checkWin();
+        }
+
+        function handleRightClick(e) {
+            e.preventDefault();
+            const row = parseInt(e.target.dataset.row);
+            const col = parseInt(e.target.dataset.col);
+            const cell = board[row][col];
+            
+            if (!cell.revealed && gameState === 'playing') {
+                cell.flagged = !cell.flagged;
+                updateDisplay();
+            }
+        }
+
+        function revealCell(row, col) {
+            const config = CONFIGS[difficulty];
+            const cell = board[row][col];
+            
+            if (cell.revealed || cell.flagged) return;
+            
+            cell.revealed = true;
+            
+            if (cell.adjacent === 0 && !cell.hasMine) {
+                // Flood fill for empty cells
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        const nr = row + dr;
+                        const nc = col + dc;
+                        if (nr >= 0 && nr < config.rows && nc >= 0 && nc < config.cols) {
+                            revealCell(nr, nc);
+                        }
+                    }
+                }
+            }
+            
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const config = CONFIGS[difficulty];
+            const cells = document.querySelectorAll('.cell');
+            let flagCount = 0;
+            
+            board.forEach((row, r) => {
+                row.forEach((cell, c) => {
+                    const cellEl = cells[r * config.cols + c];
+                    
+                    if (cell.revealed) {
+                        cellEl.classList.add('revealed');
+                        if (cell.hasMine) {
+                            cellEl.classList.add('mine');
+                            cellEl.textContent = '💣';
+                        } else if (cell.adjacent > 0) {
+                            cellEl.textContent = cell.adjacent;
+                            cellEl.classList.add(`cell-${cell.adjacent}`);
+                        } else {
+                            cellEl.textContent = '';
+                        }
+                    } else if (cell.flagged) {
+                        cellEl.classList.add('flagged');
+                        cellEl.textContent = '🚩';
+                        flagCount++;
+                    } else {
+                        cellEl.classList.remove('revealed', 'mine', 'flagged');
+                        cellEl.textContent = '';
+                        for (let i = 1; i <= 8; i++) {
+                            cellEl.classList.remove(`cell-${i}`);
+                        }
+                    }
+                });
+            });
+            
+            document.getElementById('mine-count').textContent = 
+                (config.mines - flagCount).toString().padStart(3, '0');
+        }
+
+        function checkWin() {
+            const config = CONFIGS[difficulty];
+            let unrevealedSafe = 0;
+            
+            board.forEach(row => {
+                row.forEach(cell => {
+                    if (!cell.revealed && !cell.hasMine) {
+                        unrevealedSafe++;
+                    }
+                });
+            });
+            
+            if (unrevealedSafe === 0) {
+                gameState = 'won';
+                stopTimer();
+                saveBestTime();
+                setTimeout(() => {
+                    alert('🎉 You Won! Time: ' + time + ' seconds');
+                    resetGame();
+                }, 100);
+            }
+        }
+
+        function gameOver() {
+            gameState = 'lost';
+            stopTimer();
+            
+            // Reveal all mines
+            board.forEach(row => {
+                row.forEach(cell => {
+                    if (cell.hasMine) {
+                        cell.revealed = true;
+                    }
+                });
+            });
+            
+            updateDisplay();
+            
+            setTimeout(() => {
+                alert('💥 Game Over! You hit a mine.');
+                resetGame();
+            }, 500);
+        }
+
+        function resetGame() {
+            gameState = 'idle';
+            firstClick = true;
+            time = 0;
+            stopTimer();
+            document.getElementById('timer').textContent = '000';
+            createBoard();
+        }
+
+        function startTimer() {
+            stopTimer();
+            timerInterval = setInterval(() => {
+                time++;
+                document.getElementById('timer').textContent = time.toString().padStart(3, '0');
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function saveBestTime() {
+            const key = `minesweeper-best-${difficulty}`;
+            const best = localStorage.getItem(key);
+            if (!best || time < parseInt(best)) {
+                localStorage.setItem(key, time.toString());
+                loadBestTimes();
+            }
+        }
+
+        function loadBestTimes() {
+            const times = [];
+            ['easy', 'medium', 'hard'].forEach(d => {
+                const time = localStorage.getItem(`minesweeper-best-${d}`);
+                if (time) {
+                    times.push(`${d}: ${time}s`);
+                }
+            });
+            
+            const el = document.getElementById('best-times');
+            if (times.length > 0) {
+                el.textContent = 'Best Times: ' + times.join(' | ');
+            }
+        }
+
+        // Initialize the game
+        init();
     </script>
 </body>
 </html>
