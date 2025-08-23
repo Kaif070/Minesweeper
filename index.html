@@ -271,7 +271,7 @@
                     } else {
                         this.board[row][col].revealed = true;
                     }
-                    this.render();
+                    this.renderBoard();
                     return;
                 }
                 
@@ -283,7 +283,8 @@
                 if (this.flagMode || cell.flagged) {
                     // Toggle flag
                     this.board[row][col].flagged = !this.board[row][col].flagged;
-                    this.render();
+                    this.renderBoard();
+                    this.updateMineCounter();
                     return;
                 }
                 
@@ -299,7 +300,7 @@
                     }
                     this.gameState = 'lost';
                     this.stopTimer();
-                    this.render();
+                    this.renderBoard();
                     this.showLoseModal();
                     return;
                 }
@@ -327,11 +328,18 @@
                     this.stopTimer();
                     saveBestTime(this.difficulty, this.time);
                     this.bestTimes = loadBestTimes();
-                    this.render();
+                    this.renderBoard();
                     this.showWinModal();
                 }
                 
-                this.render();
+                this.renderBoard();
+            }
+            
+            updateMineCounter() {
+                const counterEl = document.getElementById('mine-counter');
+                if (counterEl) {
+                    counterEl.textContent = this.remainingMines.toString().padStart(3, '0');
+                }
             }
 
             handleLongPress(row, col) {
@@ -415,7 +423,7 @@
                         <div class="flex justify-between items-center mb-4 bg-gray-800 rounded p-3">
                             <div class="flex items-center gap-2">
                                 <span class="text-2xl">💣</span>
-                                <span class="font-mono text-xl">${this.remainingMines.toString().padStart(3, '0')}</span>
+                                <span id="mine-counter" class="font-mono text-xl">${this.remainingMines.toString().padStart(3, '0')}</span>
                             </div>
                             
                             <button onclick="game.startNewGame()" 
@@ -453,27 +461,10 @@
                         
                         <!-- Game board -->
                         <div id="board-container" class="flex justify-center">
-                            <div class="inline-block bg-gray-800 p-2 rounded" 
-                                style="display: grid; grid-template-columns: repeat(${this.config.cols}, minmax(0, 1fr)); gap: 2px; 
-                                    max-width: ${this.difficulty === 'hard' ? '100%' : this.difficulty === 'medium' ? '600px' : '400px'};">
-                                ${Array.from({ length: this.config.rows }, (_, row) =>
-                                    Array.from({ length: this.config.cols }, (_, col) => {
-                                        const cell = this.board?.[row]?.[col];
-                                        return `
-                                            <button 
-                                                onclick="game.handleCellClick(${row}, ${col})"
-                                                onmousedown="game.handleLongPress(${row}, ${col})"
-                                                onmouseup="game.cancelLongPress()"
-                                                onmouseleave="game.cancelLongPress()"
-                                                ontouchstart="game.handleLongPress(${row}, ${col})"
-                                                ontouchend="game.cancelLongPress()"
-                                                class="${this.getCellClass(cell)}"
-                                                aria-label="Cell ${row}-${col}">
-                                                ${this.getCellContent(cell)}
-                                            </button>
-                                        `;
-                                    }).join('')
-                                ).join('')}
+                            <div id="game-grid" class="inline-block bg-gray-800 p-2 rounded" 
+                                style="display: grid; grid-template-columns: repeat(${this.config.cols}, 1fr); gap: 2px; 
+                                    width: min(90vw, ${this.difficulty === 'hard' ? '900px' : this.difficulty === 'medium' ? '600px' : '400px'});">
+                                <!-- Board cells will be rendered here -->
                             </div>
                         </div>
                     </div>
