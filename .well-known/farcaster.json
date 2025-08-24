@@ -1,28 +1,4 @@
 {
-  "frame": {
-    "name": "Minesweeper",
-    "version": "1",
-    "iconUrl": "https://minesweeper-two-tan.vercel.app/icon.png",
-    "homeUrl": "https://minesweeper-two-tan.vercel.app",
-    "imageUrl": "https://minesweeper-two-tan.vercel.app/image.png",
-    "buttonTitle": "Play Now",
-    "splashImageUrl": "https://minesweeper-two-tan.vercel.app/splash.png",
-    "splashBackgroundColor": "#1a1a1a",
-    "subtitle": "Classic puzzle game",
-    "description": "Challenge yourself with the classic Minesweeper puzzle game!",
-    "primaryCategory": "games",
-    "screenshotUrls": [
-      "https://minesweeper-two-tan.vercel.app/og-image.png"
-    ],
-    "tags": [
-      "games"
-    ],
-    "tagline": "Clear the board,",
-    "ogTitle": "Minesweeper – Classic  Game",
-    "ogDescription": "Play the Minesweeper! Clear the board without hitting a mine,test your logic",
-    "ogImageUrl": "https://minesweeper-two-tan.vercel.app/og-image.png",
-    "castShareUrl": "https://warpcast.com/~/compose?text=Playing+Minesweeper+on+Farcaster!&embeds[]=https://minesweeper-two-tan.vercel.app"
-  },
   "accountAssociation": {
     "header": "eyJmaWQiOjIzNDU2MSwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDRENzdBQTQxOUMwNTNkODI0ODBFM0MwM0M4ODI2QUI0ODA4NkY1YzYifQ",
     "payload": "eyJkb21haW4iOiJtaW5lc3dlZXBlci10d28tdGFuLnZlcmNlbC5hcHAifQ",
