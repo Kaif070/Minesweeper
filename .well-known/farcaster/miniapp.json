@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "name": "Minesweeper",
+  "slug": "minesweeper",
+  "description": "Classic Minesweeper for Farcaster Mini Apps: three modes, timer, flags, and first-click safety.",
+  "iconUrl": "https://minesweeper-two-tan.vercel.app/icon.png",
+  "splash": {
+    "imageUrl": "https://minesweeper-two-tan.vercel.app/splash.png",
+    "backgroundColor": "#1a1a1a"
+  },
+  "screenshots": [
+    { "imageUrl": "https://minesweeper-two-tan.vercel.app/og-image.png", "label": "Gameplay" }
+  ],
+  "categories": ["games"],
+  "webUrl": "https://minesweeper-two-tan.vercel.app/",
+  "routes": [
+    { "path": "/", "name": "Play" }
+  ],
+  "developer": {
+    "name": "Minesweeper Team",
+    "url": "https://minesweeper-two-tan.vercel.app/"
+  }
+}
