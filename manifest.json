@@ -1,29 +1,25 @@
 {
-  "miniapp": {
-    "version": "1",
+  "frame": {
     "name": "Minesweeper",
-    "homeUrl": "https://minesweeper.yourdomain.com",
-    "iconUrl": "https://minesweeper.yourdomain.com/icon.png",
-    "splashImageUrl": "https://minesweeper.yourdomain.com/splash.png",
+    "version": "1",
+    "iconUrl": "https://minesweeper-two-tan.vercel.app/icon.png",
+    "homeUrl": "https://minesweeper-two-tan.vercel.app",
+    "imageUrl": "https://minesweeper-two-tan.vercel.app/image.png",
+    "buttonTitle": "Play Now",
+    "splashImageUrl": "https://minesweeper-two-tan.vercel.app/splash.png",
     "splashBackgroundColor": "#1a1a1a",
     "subtitle": "Classic puzzle game",
-    "description": "Play the classic Minesweeper game with three difficulty modes. Test your logic and luck!",
+    "description": "Challenge yourself with Minesweeper! Choose from 4 difficulty modes, track your best times, and enjoy light/dark themes. How fast can you clear the board?",
     "primaryCategory": "games",
-    "tags": [
-      "puzzle",
-      "strategy",
-      "classic",
-      "logic",
-      "minesweeper"
-    ],
-    "screenshotUrls": [
-      "https://minesweeper.yourdomain.com/screenshot1.png",
-      "https://minesweeper.yourdomain.com/screenshot2.png",
-      "https://minesweeper.yourdomain.com/screenshot3.png"
-    ],
-    "tagline": "Clear the field, avoid the mines!",
-    "ogTitle": "Minesweeper - Classic Puzzle Game",
-    "ogDescription": "Play Minesweeper with Easy, Medium, and Hard modes. Test your logic skills!",
-    "ogImageUrl": "https://minesweeper.yourdomain.com/og-image.png"
+    "tags": [],
+    "ogImageUrl": "https://minesweeper-two-tan.vercel.app/og-image.png",
+    "castShareUrl": "https://warpcast.com/~/compose?text=Playing+Minesweeper+on+Farcaster!&embeds[]=https://minesweeper-two-tan.vercel.app",
+    "ogTitle": "Minesweeper - Classic Game",
+    "ogDescription": "Challenge yourself with Minesweeper! Choose difficulty, track your best times,"
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjIzNDU2MSwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDRENzdBQTQxOUMwNTNkODI0ODBFM0MwM0M4ODI2QUI0ODA4NkY1YzYifQ",
+    "payload": "eyJkb21haW4iOiJtaW5lc3dlZXBlci10d28tdGFuLnZlcmNlbC5hcHAifQ",
+    "signature": "MHgwNzg4M2JkMzQ2YzA2YjUwZjBmODkwY2Y4OWQwNTdhZDc0NjRlMDU4NTU4YTgxNDkwNjA3NDkzNzA5NTQxYmY3N2IwOTY0ZjVmYTI0NGI0N2QzNjdlMjBhOWJlZWUxNTlmY2JkOTYzOWMxOWY3ODEyOWRjOWMzY2Q2N2QyYzFkYTFi"
   }
 }
