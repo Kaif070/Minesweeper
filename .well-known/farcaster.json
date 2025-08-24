@@ -8,13 +8,11 @@
     "version": "1",
     "name": "Minesweeper",
     "iconUrl": "https://minesweeper-two-tan.vercel.app/icon.png",
-    "homeUrl": "https://minesweeper-two-tan.vercel.app",
+    "homeUrl": "https://minesweeper-two-tan.vercel.app/",
     "splashImageUrl": "https://minesweeper-two-tan.vercel.app/splash.png",
     "splashBackgroundColor": "#1a1a1a",
     "subtitle": "Classic puzzle game",
-    "description": "Challenge yourself with Minesweeper. Choose difficulty, track your best times, and enjoy a clean mobile-friendly design.",
-    "screenshotUrls": ["https://minesweeper-two-tan.vercel.app/og-image.png"],
-    "primaryCategory": "games",
-    "tags": ["minesweeper","puzzle","logic","brain"]
+    "description": "Play Minesweeper. Choose a difficulty, flag mines, and race the timer with a clean mobile UI.",
+    "primaryCategory": "games"
   }
 }
