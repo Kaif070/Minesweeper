@@ -1,9 +1,8 @@
 {
-  "redirects": [
+  "rewrites": [
     {
       "source": "/.well-known/farcaster.json",
-      "destination": "https://minesweeper-two-tan.vercel.app/.well-known/farcaster.json",
-      "permanent": false
+      "destination": "/api/manifest"
     }
   ]
 }
